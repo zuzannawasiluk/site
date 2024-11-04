@@ -1,13 +1,15 @@
 ---
 title: "Mini Project 2"
-subtitle: "By Zuzanna and George"
-format: 
-  pdf: default
-editor: visual
 ---
 
+## Penguin Random House Web Scraping
+
+Our data comes from the events page in Penguin Random House. You can find the events page using *\[the Penguin Random House events page\]*: (https://www.penguinrandomhouse.com/authors/events/).
+
 ```{r}
-#| include: FALSE
+#| message: false
+#| warning: false
+
 library(tidyverse)
 library(stringr)
 library(rvest)
@@ -15,16 +17,12 @@ library(polite)
 library(sf)
 library(maps)
 library(viridis)
-library(leaflet)
+library(leaflet) 
 library(htmltools)
-library(httr)
-library(httr2)
+library(httr) 
+library(httr2) 
 library(janitor)
 ```
-
-## Penguin Random House Web Scraping
-
-Our data comes from the events page in Penguin Random House. You can find the events page using *\[the Penguin Random House events page\]*: (https://www.penguinrandomhouse.com/authors/events/).
 
 ## Ethical Considerations
 
@@ -42,9 +40,12 @@ Students can use our data to answer questions such as:
 
 -   "What are the best events to attend to network with the right authors and book genres?"
 
-Upon further reflection, we discovered that our data could also be used by booksellers, book agents, and authors. Booksellers and authors may find our data useful because they can analyze current trends with where authors are going (chain or independent bookstore) and what authors are successful in book events (if we assume multiple book events equals a marketable author).Book agents within Penguin Random House or outside of it (smaller boutique literary agencies or other Big Five publishers) can use our data to answer questions on which authors are holding events, when a certain book is no longer welcomed in event spaces, and perhaps even publicity tactics. Ultimately, this data has relevant applications for different data needs within the publishing industry, not just students.
+Upon further reflection, we discovered that our data could also be used by booksellers, book agents, and authors. Booksellers and authors may find our data useful because they can analyze current trends with where authors are going (chain or independent bookstore) and what authors are successful in book events (if we assume multiple book events equals a marketable author).Book agents within Penguin Random House or outside of it (smaller boutique literary agencies or other Big Five publishers) can use our data to answer questions on which authors are holding events, when a certain book is no longer welcomed in event spaces, and perhaps even publicity tactics. This data has relevant applications for different data needs within the publishing industry and for creating engaging data visualizations (including static or leaflet maps).
 
 ```{r}
+#| message: false
+#| warning: false
+
 #Step 0: Check if the website allows scraping 
 robotstxt::paths_allowed("https://www.penguinrandomhouse.com/authors/events/")
 
@@ -62,6 +63,9 @@ info_from_page("https://www.penguinrandomhouse.com/authors/events/", ".date-disp
 ```
 
 ```{r}
+#| message: false
+#| warning: false
+
 #Scrape info using the CSS path and compile it into a tibble 
 scrape_events <- function(url){
   
@@ -79,13 +83,17 @@ scrape_events <- function(url){
            state = state)
   
 }
+```
 
+```{r}
 #Test to see that our tibble looks appropriate
 scrape_events("https://www.penguinrandomhouse.com/authors/events/?page=2")
 ```
 
 ```{r}
-#| eval: FALSE
+#| message: false
+#| warning: false
+
 #This for loop runs all of the months and all of the days
 #   in one chunk but it is not the most efficient 
 
@@ -127,6 +135,9 @@ scrape_events(url)
 ```
 
 ```{r}
+#| message: false
+#| warning: false
+
 #Running each individual month as a separate 
 #   for loop to be more efficient
 

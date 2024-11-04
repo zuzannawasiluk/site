@@ -1,12 +1,13 @@
 ---
-title: "Mini Project 1 : Choropleth Maps"
-subtitle: "By Zuzanna Wasiluk"
-format:
-  html: default
-editor: visual
+title: "Mini Project 1"
 ---
 
+I produced four choropleth maps illustrating two different characteristics – one numeric and one categorical – that have been measured for each US state. The numerical data was on obesity data and the categorical data was created from a dataset on the number of bikeshare systems. This data is displayed in both static and interactive forms.
+
 ```{r}
+#| message: false
+#| warning: false
+
 # Loading packages 
 
 library(tidyverse)
@@ -18,10 +19,13 @@ library(ggplot2)
 ```
 
 ```{r}
+#| message: false
+#| warning: false
+
 # Loading and renaming my datasets
 
 library(readr)
-nutrition_physical_data <- read_csv("Nutrition__Physical_Activity__and_Obesity_-_Behavioral_Risk_Factor_Surveillance_System.csv")
+nutrition_physical_data <- read_csv("Nutrition__Physical_Activity__and_Obesity_-_Behavioral_Risk_Factor_Surveillance_System (2).csv")
 
 bikeshare <- read_csv("Bikeshare_Scooter_Systems_20240919.csv") |>
   rename(state = STATE,
@@ -31,6 +35,9 @@ bikeshare <- read_csv("Bikeshare_Scooter_Systems_20240919.csv") |>
 ```
 
 ```{r}
+#| message: false
+#| warning: false
+
 # New saved data
 obesity_data <- nutrition_physical_data |>
   #Renaming variable to make it easier to work with
@@ -92,6 +99,9 @@ The link to the website where I found this data can be found here:[U.S. Departme
 Alt_Text: This is a choropleth plot of the United States (48 states minus Hawaii and Alaska) that visualizes percentages of adult obesity in each state. It has a continuous scale alongside the map graph with a range of 11 to 27, the scale is labeled as "Percentage of Population." The variables are state and percentage of adult population with obesity. The appearance of the colors for most of the states suggests that the total adult population who have obesity floats around 18 percent (the middle of the scale) for the United States. However, the light yellow and orange color in the Southern region tells us that the percentage of adult obesity is higher in the South.
 
 ```{r}
+#| message: false
+#| warning: false
+
 #Create categorical variable
 bikeshare_state <- bikeshare |>
   #Group by state to find the number of cities in each state with a bikeshare scooter system
@@ -107,6 +117,9 @@ bikeshare_state <- bikeshare |>
 ```
 
 ```{r}
+#| message: false
+#| warning: false
+
 #Group by to have a dataset to merge with the other one that contains the written out state name instead of abbreviation 
 nutrition <- nutrition_physical_data |>
   group_by(LocationDesc, LocationAbbr) |>
@@ -114,6 +127,9 @@ nutrition <- nutrition_physical_data |>
 ```
 
 ```{r}
+#| message: false
+#| warning: false
+
 #Merge the dataset to have bstates with the lowercase versions of the state names 
 bstates <- bikeshare_state |>
   right_join(nutrition, by = c("state" = "LocationAbbr")) |>
@@ -150,19 +166,24 @@ The plot above describes the "classification" of bikeshare scooter systems in US
 The data can be found under this link [Bureau of Transportation Statistics' website](https://data.bts.gov/dataset/Bikeshare-Scooter-Systems/ajr2-wpfp/about_data).
 
 ```{r}
+#| message: false
+#| warning: false
+
 library(leaflet)
 library(sf)
+library(htmltools)
+library(glue)
 ```
 
 ```{r}
+#| message: false
+#| warning: false
+
 # Create density bins 
 weight_int_state <- obesity_data |>
   mutate(density = cut(Data_Value, n = 6,
           breaks = c(0, 5, 10, 15, 20, 25, 30))) |>
   filter(!(state %in% c("alaska", "hawaii", "puerto rico", "national")))
-
-library(htmltools)
-library(glue)
 
 #Create labels by combining multiple strings into one string 
 weight_int_state <- weight_int_state |>
@@ -176,7 +197,9 @@ leaflet_data <- weight_int_state |>
 ```
 
 ```{r}
-library(sf) 
+#| message: false
+#| warning: false
+
 states <- read_sf("https://rstudio.github.io/leaflet/json/us-states.geojson")  
 class(states) 
 #Create a new variable with lowercase letters

@@ -9,7 +9,7 @@ website:
       - href: index.qmd
         text: Home
       - project_file_gz.qmd
-      - mini project 1.qmd
+      - zw_mini_project_1a.qmd
       - econ.qmd
 
 format:
